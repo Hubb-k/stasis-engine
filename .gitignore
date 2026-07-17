@@ -2,4 +2,3 @@
 **/*.rs.bk
 *.bin
 state.bin
-Cargo.lock
