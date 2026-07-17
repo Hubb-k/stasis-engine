@@ -1,0 +1,10 @@
+gain = 5.0
+resistance = 2.0
+initial_agents_count = 10
+initial_energy = 50.0
+max_ticks = 100
+mutation_threshold = 100.0
+min_age_for_mutation = 10
+mutation_reset_energy = 50.0
+interference_factor = 0.1
+state_file = "state.bin"

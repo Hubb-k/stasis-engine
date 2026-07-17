@@ -1,0 +1,20 @@
+[workspace]
+members = [
+    "resonance-core",
+    "state-crystal",
+    "agent-framework",
+    "config-layer",
+]
+resolver = "2"
+
+[package]
+name = "stasis-engine"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+agent-framework = { path = "agent-framework" }
+config-layer = { path = "config-layer" }
+resonance-core = { path = "resonance-core" }
+state-crystal = { path = "state-crystal" }
+serde = { version = "1.0", features = ["derive"] }
