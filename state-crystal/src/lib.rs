@@ -10,13 +10,13 @@ const VERSION: u32 = 3;
 pub enum CrystalError {
     #[error("IO error: {0}")]
     IoError(#[from] std::io::Error),
-    
+
     #[error("Serialization error: {0}")]
     SerializeError(#[from] bincode::Error),
-    
+
     #[error("Invalid magic bytes")]
     InvalidMagic,
-    
+
     #[error("Unsupported version: {0}")]
     UnsupportedVersion(u32),
 }
@@ -37,24 +37,24 @@ impl Crystalizer {
 
     pub fn thaw<T: Stasis>(path: &str) -> Result<T, CrystalError> {
         let mut file = File::open(path)?;
-        
+
         let mut magic = [0u8; 4];
         file.read_exact(&mut magic)?;
         if &magic != MAGIC {
             return Err(CrystalError::InvalidMagic);
         }
-        
+
         let mut version_bytes = [0u8; 4];
         file.read_exact(&mut version_bytes)?;
         let version = u32::from_le_bytes(version_bytes);
         if version != VERSION {
             return Err(CrystalError::UnsupportedVersion(version));
         }
-        
+
         let mut buffer = Vec::new();
         file.read_to_end(&mut buffer)?;
         let data = bincode::deserialize(&buffer)?;
-        
+
         Ok(data)
     }
 }
@@ -75,11 +75,11 @@ mod tests {
             value: 42,
             name: "test".to_string(),
         };
-        
+
         let path = "test_stasis.bin";
         Crystalizer::freeze(path, &data).unwrap();
         let loaded: TestData = Crystalizer::thaw(path).unwrap();
-        
+
         assert_eq!(data, loaded);
         std::fs::remove_file(path).ok();
     }
@@ -100,7 +100,7 @@ mod tests {
         file.write_all(b"UMBR").unwrap();
         file.write_all(&999u32.to_le_bytes()).unwrap();
         drop(file);
-        
+
         let result: Result<TestData, _> = Crystalizer::thaw(path);
         assert!(matches!(result, Err(CrystalError::UnsupportedVersion(999))));
         std::fs::remove_file(path).ok();
